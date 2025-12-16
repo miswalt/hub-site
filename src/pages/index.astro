@@ -1,11 +1,250 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import { projects } from "../data/projects";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const featured = projects.find((p) => p.featured);
+const rest = projects.filter((p) => !p.featured);
+
+// SVG strings (rendered safely with set:html)
+const ICONS: Record<string, string> = {
+  Streamlit: `
+    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M7 14c3-2 7-3 10-2 2 1 2 3 0 4-3 2-7 3-10 2-2-1-2-3 0-4Z"></path>
+      <path d="M8 7c3-2 6-2 9-1 2 1 2 3 0 4-3 2-6 2-9 1-2-1-2-3 0-4Z" opacity="0.6"></path>
+    </svg>
+  `,
+  Replit: `
+    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M6 7h12a2 2 0 0 1 2 2v6a4 4 0 0 1-4 4H10a6 6 0 0 1-6-6V9a2 2 0 0 1 2-2Z"></path>
+      <path d="M9 11h6" opacity="0.6"></path>
+      <path d="M9 14h4" opacity="0.6"></path>
+    </svg>
+  `,
+};
+
+const iconFor = (platform: "Streamlit" | "Replit") => ICONS[platform] ?? "";
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mike Iswalt</title>
+
+    <script>
+      const saved = localStorage.getItem("theme");
+      if (saved) document.documentElement.dataset.theme = saved;
+    </script>
+
+    <style>
+      :root {
+        --bg: #ffffff;
+        --fg: #0b0c0f;
+        --muted: rgba(0, 0, 0, 0.65);
+        --muted2: rgba(0, 0, 0, 0.12);
+        --card: #ffffff;
+        --shadow: rgba(0, 0, 0, 0.06);
+        --accent: rgba(0, 0, 0, 0.92);
+        --tag: rgba(0, 0, 0, 0.05);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0b0c0f;
+          --fg: #f3f4f6;
+          --muted: rgba(255, 255, 255, 0.72);
+          --muted2: rgba(255, 255, 255, 0.14);
+          --card: #111318;
+          --shadow: rgba(0, 0, 0, 0.38);
+          --accent: rgba(255, 255, 255, 0.92);
+          --tag: rgba(255, 255, 255, 0.08);
+        }
+      }
+
+      html[data-theme="light"] {
+        --bg: #ffffff;
+        --fg: #0b0c0f;
+        --muted: rgba(0, 0, 0, 0.65);
+        --muted2: rgba(0, 0, 0, 0.12);
+        --card: #ffffff;
+        --shadow: rgba(0, 0, 0, 0.06);
+        --accent: rgba(0, 0, 0, 0.92);
+        --tag: rgba(0, 0, 0, 0.05);
+      }
+      html[data-theme="dark"] {
+        --bg: #0b0c0f;
+        --fg: #f3f4f6;
+        --muted: rgba(255, 255, 255, 0.72);
+        --muted2: rgba(255, 255, 255, 0.14);
+        --card: #111318;
+        --shadow: rgba(0, 0, 0, 0.38);
+        --accent: rgba(255, 255, 255, 0.92);
+        --tag: rgba(255, 255, 255, 0.08);
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      }
+
+      .wrap { max-width: 1040px; margin: 0 auto; padding: 44px 20px 50px; }
+      .topbar { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
+      .brand { display: grid; gap: 8px; }
+      .kicker { font-size: 13px; opacity: 0.8; letter-spacing: 0.08em; text-transform: uppercase; }
+      h1 { font-size: 40px; margin: 0; letter-spacing: -0.02em; }
+      .tagline { margin: 0; font-size: 18px; line-height: 1.45; opacity: 0.86; max-width: 62ch; }
+
+      .toggle {
+        border: 1px solid var(--muted2);
+        background: var(--card);
+        color: var(--fg);
+        border-radius: 999px;
+        padding: 10px 12px;
+        cursor: pointer;
+        box-shadow: 0 8px 24px var(--shadow);
+        font-weight: 650;
+        white-space: nowrap;
+      }
+
+      .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 14px; margin-top: 22px; }
+      .card {
+        grid-column: span 12;
+        border: 1px solid var(--muted2);
+        border-radius: 18px;
+        padding: 16px;
+        background: var(--card);
+        box-shadow: 0 10px 28px var(--shadow);
+        display: grid;
+        gap: 10px;
+      }
+      @media (min-width: 820px) { .card { grid-column: span 6; } }
+
+      .featured { grid-column: span 12; padding: 18px; border-radius: 22px; }
+
+      .head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+      .left { display: flex; align-items: center; gap: 10px; min-width: 0; }
+      .title { font-size: 18px; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .pill {
+        display: inline-flex; align-items: center; gap: 8px;
+        font-size: 12px; padding: 6px 10px; border-radius: 999px;
+        border: 1px solid var(--muted2); opacity: 0.9;
+      }
+      .desc { margin: 0; color: var(--muted); line-height: 1.45; }
+
+      .tags { display: flex; flex-wrap: wrap; gap: 8px; }
+      .tag { font-size: 12px; padding: 5px 9px; border-radius: 999px; background: var(--tag); }
+
+      .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+      .btn {
+        display: inline-flex; align-items: center; justify-content: center;
+        padding: 10px 12px;
+        border-radius: 14px;
+        border: 1px solid var(--muted2);
+        text-decoration: none;
+        font-weight: 650;
+        background: var(--card);
+      }
+      .btn.primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+
+      .hint { font-size: 13px; opacity: 0.65; align-self: center; }
+
+      .icon { width: 16px; height: 16px; fill: currentColor; }
+
+      .footer { margin-top: 34px; opacity: 0.75; font-size: 14px; display: flex; gap: 12px; flex-wrap: wrap; }
+      a { color: inherit; }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrap">
+      <div class="topbar">
+        <div class="brand">
+          <div class="kicker">Apps & experiments</div>
+          <h1>Mike Iswalt</h1>
+          <p class="tagline">
+            Practical tools for transit analytics, operations dashboards, and urban planning.
+          </p>
+        </div>
+
+        <button
+          class="toggle"
+          type="button"
+          onclick="
+            const cur = document.documentElement.dataset.theme;
+            const next = cur === 'dark' ? 'light' : 'dark';
+            document.documentElement.dataset.theme = next;
+            localStorage.setItem('theme', next);
+          "
+        >
+          Toggle theme
+        </button>
+      </div>
+
+      <div class="grid">
+        {featured ? (
+          <article class="card featured">
+            <div class="head">
+              <div class="left">
+                <h2 class="title">{featured.title}</h2>
+              </div>
+              <span class="pill">
+                <span set:html={iconFor(featured.platform)} />
+                {featured.platform}
+              </span>
+            </div>
+
+            <p class="desc">{featured.description}</p>
+
+            {featured.tags?.length ? (
+              <div class="tags">
+                {featured.tags.map((t) => <span class="tag">{t}</span>)}
+              </div>
+            ) : null}
+
+            <div class="actions">
+              <a class="btn primary" href={featured.href} target="_blank" rel="noopener noreferrer">
+                Launch app →
+              </a>
+              <span class="hint">Live deployment</span>
+            </div>
+          </article>
+        ) : null}
+
+        {rest.map((p) => (
+          <article class="card">
+            <div class="head">
+              <div class="left">
+                <h2 class="title">{p.title}</h2>
+              </div>
+              <span class="pill">
+                <span set:html={iconFor(p.platform)} />
+                {p.platform}
+              </span>
+            </div>
+
+            <p class="desc">{p.description}</p>
+
+            {p.tags?.length ? (
+              <div class="tags">
+                {p.tags.map((t) => <span class="tag">{t}</span>)}
+              </div>
+            ) : null}
+
+            <div class="actions">
+              <a class="btn primary" href={p.href} target="_blank" rel="noopener noreferrer">
+                Launch app →
+              </a>
+              <span class="hint">{p.platform} deployment</span>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <div class="footer">
+        <a href="/about">About</a>
+        <span>·</span>
+        <a href="mailto:you@yourdomain.com">Contact</a>
+      </div>
+    </div>
+  </body>
+</html>
