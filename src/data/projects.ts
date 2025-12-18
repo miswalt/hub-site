@@ -13,7 +13,7 @@ export const projects: Project[] = [
     slug: "urban-agent",
     title: "Urban Agent",
     description:
-      "An urban planning assistant for exploration, engagement, and scenario thinking.",
+      "A demonstration AI-agent app for urban planners to process, track, and review building applications",
     href: "https://urban-agent--mikeiswalt.replit.app/",
     platform: "Replit",
     featured: true,
