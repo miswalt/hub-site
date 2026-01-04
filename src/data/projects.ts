@@ -15,8 +15,23 @@ export type Project = {
   span?: ProjectSpan;
 };
 
+// NEW: featured hero config (keeps Project type clean)
+export const featuredProject = {
+  title: "Moda Tool",
+  subtitle: "Microtransit simulation + dispatch sandbox",
+  description:
+    "A fast, interactive microtransit tool for exploring demand, service design, and routing workflows — built on Replit.",
+  href: "https://moda-tool.com",
+  platform: "Replit" as const,
+
+  // Put these images in /public (recommended)
+  iconSrc: "/moda-icon.png",
+  screenshotSrc: "/moda-screenshot.png",
+  screenshotAlt: "Moda Tool screenshot",
+};
+
 export const projects: Project[] = [
-  // ── Microtransit (pair)
+  // ── Microtransit
   {
     slug: "microtransit-insights",
     title: "Microtransit Insights",
@@ -27,18 +42,21 @@ export const projects: Project[] = [
     group: "microtransit",
     tags: ["microtransit", "VRP", "Nextmv"],
   },
+
+  // (Optional) If you want Moda Tool to ALSO appear as a card, keep this.
+  // If you want it ONLY as the hero, delete this block.
   {
-    slug: "shared-ride",
-    title: "Shared Ride/Delivery Tool",
+    slug: "moda-tool",
+    title: "Moda Tool",
     description:
-      "Another microtransit app exploring shared-ride demand and routing using VROOM's open-source solver and developed with Replit.",
-    href: "https://shared-ride.replit.app/",
+      "An interactive microtransit tool for exploring demand, service design, and dispatch workflows — built on Replit.",
+    href: "https://moda-tool.com",
     platform: "Replit",
     group: "microtransit",
     tags: ["microtransit", "routing", "dispatch"],
   },
 
-  // ── Transit analytics (pair)
+  // ── Transit analytics
   {
     slug: "ntd-transit-ai",
     title: "NTD Transit AI",
@@ -60,7 +78,7 @@ export const projects: Project[] = [
     tags: ["GTFS", "QA", "maps"],
   },
 
-  // ── Planning experiments (pair)
+  // ── Planning experiments
   {
     slug: "urban-agent",
     title: "Urban Agent",
