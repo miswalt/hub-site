@@ -36,7 +36,7 @@ export const projects: Project[] = [
     slug: "microtransit-insights",
     title: "Microtransit Insights",
     description:
-      "A microtransit simulation and optimization tool using Nextmv's solver and deployed to Streamlit.",
+      "A microtransit simulation and optimization tool using Nextmv's solver and deployed to Streamlit. This was developed as an MVP for MODA-Tool.",
     href: "https://microtransit-insights.streamlit.app/",
     platform: "Streamlit",
     group: "microtransit",
