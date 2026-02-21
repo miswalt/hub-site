@@ -30,6 +30,25 @@ export const featuredProject = {
   screenshotAlt: "Moda Tool screenshot",
 };
 
+/**
+ * NEW: Mobility Safari hero config (for the 2-up featured row)
+ * Put these assets in:
+ *  - /public/img/icons/mobility-safari-icon.webp
+ *  - /public/img/screens/mobility-safari-app.webp
+ */
+export const mobilitySafariProject = {
+  title: "Mobility Safari",
+  subtitle: "Travel demand model + scenario analysis platform",
+  description:
+    "A planning-level modeling and scenario analysis tool for exploring travel demand patterns and visualizing network/market dynamics.",
+  href: "https://mobility-safari.replit.app/",
+  platform: "Replit" as const,
+
+  iconSrc: "/mobility-safari-icon.png",
+  screenshotSrc: "/mobility-safari-app.png",
+  screenshotAlt: "Mobility Safari app screenshot",
+};
+
 export const projects: Project[] = [
   // ── Microtransit
   {
@@ -79,6 +98,15 @@ export const projects: Project[] = [
   },
 
   // ── Planning experiments
+  {
+    slug: "mobility-safari",
+    title: "Mobility Safari",
+    description: "Travel demand model and scenario analysis platform.",
+    href: "https://YOUR-MOBILITY-SAFARI-URL",
+    platform: "Replit",
+    group: "planning",
+    tags: ["travel demand", "scenario analysis", "maps"],
+  },
   {
     slug: "urban-agent",
     title: "Urban Agent",
