@@ -41,7 +41,7 @@ export const mobilitySafariProject = {
   subtitle: "Travel demand model + scenario analysis platform",
   description:
     "A planning-level modeling and scenario analysis tool for exploring travel demand patterns and visualizing network/market dynamics.",
-  href: "https://mobility-safari.replit.app/",
+  href: "https://mobilitysafari.app/",
   platform: "Replit" as const,
 
   iconSrc: "/mobility-safari-icon.png",
